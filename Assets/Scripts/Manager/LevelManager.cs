@@ -13,20 +13,26 @@ public enum LevelSize
 /// </summary>
 public class LevelManager : MonoBehaviour, ISingleton
 {
-    private GameObject squareTilePrefab;
+    private GameObject cellPrefab;
+    public GameObject tilePrefab;
 
     /// <summary>
     /// Initializes the LevelManager by loading the square tile prefab.
     /// </summary>
     public void Init()
     {
-        squareTilePrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
-        if (squareTilePrefab == null)
+        cellPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
+        tilePrefab = Resources.Load<GameObject>("Prefabs/Objects/TileObject");
+        if (cellPrefab == null)
         {
             Debug.LogError("Cell prefab could not be loaded from Resources/Prefabs/Objects/Cell");
         }
+        if (tilePrefab == null)
+        {
+            Debug.LogError("Tile prefab could not be loaded from Resources/Prefabs/Objects/TileObject");
+        }
 
-        //GenerateLevel(LevelSize.FiveByFive);
+        GenerateLevel(LevelSize.FiveByFive);
     }
 
     /// <summary>
@@ -91,8 +97,66 @@ public class LevelManager : MonoBehaviour, ISingleton
             for (int col = 0; col < cols; col++)
             {
                 Vector3 position = new Vector3(col, 0, row);
-                Instantiate(squareTilePrefab, position, Quaternion.identity, transform);
+                GameObject cellInstance = Instantiate(cellPrefab, position, Quaternion.identity, transform);
+
+                // Log the instance creation for debugging
+                Debug.Log($"Created cell at position {position}");
+
+                Tile tile = cellInstance.GetComponent<Tile>();
+                if (tile == null)
+                {
+                    Debug.LogError("Tile component could not be found on the instantiated cellPrefab.");
+                    continue;
+                }
+
+                // Add random objects to the cell
+                AddRandomTileObject(tile);
             }
         }
+    }
+
+    /// <summary>
+    /// Adds a random tile object (Frog, Arrow, or Grape) to the specified tile.
+    /// </summary>
+    /// <param name="tile">The tile to add the object to.</param>
+    private void AddRandomTileObject(Tile tile)
+    {
+        if (tile == null)
+        {
+            Debug.LogError("Tile is null in AddRandomTileObject");
+            return;
+        }
+
+        int randomObject = Random.Range(0, 3);
+        GameObject tileObjectPrefab = null;
+
+        switch (randomObject)
+        {
+            case 0:
+                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Frog");
+                break;
+            case 1:
+                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
+                break;
+            case 2:
+                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
+                break;
+        }
+
+        if (tileObjectPrefab == null)
+        {
+            Debug.LogError($"Tile object prefab could not be loaded for randomObject: {randomObject}");
+            return;
+        }
+
+        GameObject tileObjectInstance = Instantiate(tileObjectPrefab, tile.transform);
+        BaseObject tileObject = tileObjectInstance.GetComponent<BaseObject>();
+        if (tileObject == null)
+        {
+            Debug.LogError("BaseObject component could not be found on the instantiated tileObjectPrefab.");
+            return;
+        }
+
+        tile.AddTileObject(tileObject);
     }
 }

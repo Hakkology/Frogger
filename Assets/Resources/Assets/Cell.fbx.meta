@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: da83986bc9062a9498fe946869b805a5
+guid: 559446c9e6204894ebf0a57a3797ed4c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,17 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: SquareMaterial
-    second: {fileID: 2100000, guid: 2367f87170d45ff4da471bf8f0a6cecf, type: 2}
+    second: {fileID: 2100000, guid: d13e2c46ae50104479fa6760eb6c0e20, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: White
-    second: {fileID: 2100000, guid: fdb42cc85690fb746994e76783a81814, type: 2}
+    second: {fileID: 2100000, guid: ec4c89912556493438f04725e9dd397b, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: SquareYellow
-    second: {fileID: 2800000, guid: 2c1b0c18ac574e240ab5dbaa2800e601, type: 3}
+    second: {fileID: 2800000, guid: 6843f6e9eeb6e9641b733cef17ff1121, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
