@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public enum LevelSize
@@ -116,7 +117,7 @@ public class LevelManager : MonoBehaviour, ISingleton
     }
 
     /// <summary>
-    /// Adds a random tile object (Frog, Arrow, or Grape) to the specified tile.
+    /// Adds a random tile object to the specified tile.
     /// </summary>
     /// <param name="tile">The tile to add the object to.</param>
     private void AddRandomTileObject(Tile tile)
@@ -127,6 +128,20 @@ public class LevelManager : MonoBehaviour, ISingleton
             return;
         }
 
+        GameObject tileObjectPrefab = SelectRandomTileObject();
+
+        if (tileObjectPrefab != null)
+        {
+            SpawnTileObject(tile, tileObjectPrefab);
+        }
+    }
+
+    /// <summary>
+    /// Selects a random tile object prefab (Frog, Arrow, or Grape).
+    /// </summary>
+    /// <returns>The selected tile object prefab.</returns>
+    private GameObject SelectRandomTileObject()
+    {
         int randomObject = Random.Range(0, 3);
         GameObject tileObjectPrefab = null;
 
@@ -136,7 +151,7 @@ public class LevelManager : MonoBehaviour, ISingleton
                 tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Frog");
                 break;
             case 1:
-                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
+                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
                 break;
             case 2:
                 tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
@@ -146,10 +161,23 @@ public class LevelManager : MonoBehaviour, ISingleton
         if (tileObjectPrefab == null)
         {
             Debug.LogError($"Tile object prefab could not be loaded for randomObject: {randomObject}");
-            return;
         }
 
-        GameObject tileObjectInstance = Instantiate(tileObjectPrefab, tile.transform);
+        return tileObjectPrefab;
+    }
+
+    /// <summary>
+    /// Spawns a tile object on the specified tile with a growth animation.
+    /// </summary>
+    /// <param name="tile">The tile to add the object to.</param>
+    /// <param name="tileObjectPrefab">The tile object prefab to instantiate.</param>
+    private void SpawnTileObject(Tile tile, GameObject tileObjectPrefab)
+    {
+        Vector3 position = tile.transform.position + Vector3.up*.5f;
+        GameObject tileObjectInstance = Instantiate(tileObjectPrefab, position, Quaternion.identity, tile.transform);
+        tileObjectInstance.transform.localScale = Vector3.zero;
+        tileObjectInstance.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+
         BaseObject tileObject = tileObjectInstance.GetComponent<BaseObject>();
         if (tileObject == null)
         {

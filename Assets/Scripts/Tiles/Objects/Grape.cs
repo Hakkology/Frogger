@@ -1,9 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Represents a berry on a tile.
+/// Represents a Grape on a tile.
 /// </summary>
-public class Berry : BaseObject
+public class Grape : BaseObject
 {
     public override void Init()
     {
