@@ -15,7 +15,7 @@ public enum LevelSize
 public class LevelManager : MonoBehaviour, ISingleton
 {
     private GameObject cellPrefab;
-    public GameObject tilePrefab;
+    private GameObject tilePrefab;
 
     /// <summary>
     /// Initializes the LevelManager by loading the square tile prefab.
@@ -154,7 +154,7 @@ public class LevelManager : MonoBehaviour, ISingleton
                 tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
                 break;
             case 2:
-                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
+                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Arrow");
                 break;
         }
 

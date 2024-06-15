@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b9894ad040be307d8803d3841cdc1a5, type: 3}
+  m_Name: Frog Texture Data
+  m_EditorClassIdentifier: 
+  frogTextures:
+  - {fileID: 2800000, guid: 23354e715149fc14eb4172da72e6cdc8, type: 3}
+  - {fileID: 2800000, guid: a5cb3e830621679438339e8160aed3e0, type: 3}
+  - {fileID: 2800000, guid: defd90584e604f3448baf60e5618eba5, type: 3}
+  - {fileID: 2800000, guid: 338464ea02a440942b0e397a06ba8872, type: 3}
+  - {fileID: 2800000, guid: 078012f0bff593a48bbcbe88489df1fa, type: 3}

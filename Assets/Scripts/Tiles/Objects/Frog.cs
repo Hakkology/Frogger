@@ -3,19 +3,24 @@ using UnityEngine;
 /// <summary>
 /// Represents a frog on a tile.
 /// </summary>
-public class Frog : BaseObject
+public class Frog : DirectionObject
 {
-    public enum Direction { Up, Down, Left, Right }
-    public Direction facingDirection;
-
-    public override void Init()
+    protected override void Awake() 
     {
+        base.Awake();
+        Debug.Log("Frog Awake called, subscribing to Texture Change.");
+        textureRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+    } 
 
+    private void Start() 
+    {
+        var textures = textureManager.GetRandomFrogTexture();
+        HandleTextureChange(textures.frogTexture, textures.cellTexture);
     }
 
     public override void Interact()
     {
-
+        
     }
 
     /// <summary>

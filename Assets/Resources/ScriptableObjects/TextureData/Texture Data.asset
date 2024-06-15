@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36861e84549e68e0c94870be247509a6, type: 3}
+  m_Name: Texture Data
+  m_EditorClassIdentifier: 
+  cellTextureData: {fileID: 11400000, guid: f76219a663ce9ef9a94b40b821854726, type: 2}
+  frogTextureData: {fileID: 11400000, guid: 2704e76dcdc61c9fc958ded42f331720, type: 2}
+  grapeTextureData: {fileID: 11400000, guid: 1a05e18201f4f09019836913fd718ad0, type: 2}
