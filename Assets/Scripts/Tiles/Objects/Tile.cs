@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public class Tile : BaseObject, ITileObject
 {
+    public int gridX, gridY;
     private List<BaseObject> tileObjects = new List<BaseObject>();
     protected override void Awake() 
     {
@@ -13,9 +14,10 @@ public class Tile : BaseObject, ITileObject
         textureRenderer = GetComponent<Renderer>();
     } 
 
-    private void OnDisable() 
+    public void Initialize(int x, int y)
     {
-
+        gridX = x;
+        gridY = y;
     }
     public override void Interact()
     {
@@ -54,5 +56,7 @@ public class Tile : BaseObject, ITileObject
         {
             Debug.LogError("Renderer or materials array is not properly set up.");
         }
-    } 
+    }
+
+
 }

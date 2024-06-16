@@ -11,6 +11,11 @@ public interface ITileObject
     void Interact();
 
     /// <summary>
+    /// Register Coordinates of the tile.
+    /// </summary>
+    public void Initialize(int x, int y);
+
+    /// <summary>
     /// Adds a new object to the tile.
     /// </summary>
     /// <param name="tileObject">The object to add.</param>

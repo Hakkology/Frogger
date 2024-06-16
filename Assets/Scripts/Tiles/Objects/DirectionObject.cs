@@ -18,17 +18,30 @@ public abstract class DirectionObject : DynamicObject, IDirectionObject
     {
         var possibleDirections = new List<Direction>();
 
-        if (position.y < 6 - 1) possibleDirections.Add(Direction.Up);
-        if (position.y > 0) possibleDirections.Add(Direction.Down);
-        if (position.x < 6 - 1) possibleDirections.Add(Direction.Right);
-        if (position.x > 0) possibleDirections.Add(Direction.Left);
+        if (boardPosition.y < 6 - 1) // Üst sınır kontrolü
+            possibleDirections.Add(Direction.Up);
+        if (boardPosition.y > 0) // Alt sınır kontrolü
+            possibleDirections.Add(Direction.Down);
+        if (boardPosition.x < 6 - 1) // Sağ sınır kontrolü
+            possibleDirections.Add(Direction.Right);
+        if (boardPosition.x > 0) // Sol sınır kontrolü
+            possibleDirections.Add(Direction.Left);
 
-        int randomIndex = Random.Range(0, possibleDirections.Count);
-        facingDirection = possibleDirections[randomIndex];
+        if (possibleDirections.Count > 0)
+        {
+            int randomIndex = Random.Range(0, possibleDirections.Count);
+            facingDirection = possibleDirections[randomIndex];
+            Debug.Log($"Determined facing direction for {this.name}: {facingDirection} at {boardPosition.x}, {boardPosition.y})");
+        }
+        else
+        {
+            Debug.LogError("No valid directions available.");
+        }
     }
 
     protected virtual void RotateObjectToFaceDirection()
     {
+        Debug.Log($"Rotating to face direction: {facingDirection}");
         float angle = facingDirection switch
         {
             Direction.Up => 0,

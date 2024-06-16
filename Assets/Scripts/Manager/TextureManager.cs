@@ -26,4 +26,11 @@ public class TextureManager : MonoBehaviour, ISingleton
         Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
         return (grapeTexture, cellTexture);
     }
+    public (Texture2D arrowTexture, Texture2D cellTexture) GetRandomArrowTexture()
+    {
+        int index = Random.Range(0, textureData.cellTextureData.cellTextures.Length);
+        Texture2D arrowTexture = textureData.cellTextureData.cellTextures[index];
+        Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
+        return (arrowTexture, cellTexture);
+    }
 }
