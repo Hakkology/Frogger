@@ -8,7 +8,7 @@ using UnityEngine;
 public class Frog : DirectionObject
 {
     public Transform tongueBone;
-    private TongueMesh tongueMesh;
+    private TongueManager tongue;
     private bool isAnimating = false;
     
     protected override void Awake() 
@@ -16,7 +16,7 @@ public class Frog : DirectionObject
         base.Awake();
         Debug.Log("Frog Awake called, subscribing to Texture Change.");
         textureRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        tongueMesh = GetComponentInChildren<TongueMesh>();
+        tongue = GetComponentInChildren<TongueManager>();
     } 
 
     private void Start() 
@@ -30,9 +30,9 @@ public class Frog : DirectionObject
         if (!isAnimating)
         {
             isAnimating = true;
-            GetPath();
+            List<Vector2Int> travelCoordinates = GetPath();
             Debug.Log("Starting tongue animation.");
-            tongueMesh.ExtendTongue(facingDirection, 2.0f, 0.5f, () => {isAnimating = false;});
+            tongue.ExtendTongue(travelCoordinates, () => {isAnimating = false;});
             tongueBone.DOLocalRotate(new Vector3(0, 0, -100), 0.5f).SetLoops(2, LoopType.Yoyo);
         }
     }
