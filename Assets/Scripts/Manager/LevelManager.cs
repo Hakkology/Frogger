@@ -93,12 +93,6 @@ public class LevelManager : MonoBehaviour, ISingleton
     /// <param name="cols">The number of columns in the level.</param>
     private void CreateNewLevel(int rows, int cols)
     {
-        TileManager tileManager = SingletonManager.GetSingleton<TileManager>();
-        if (tileManager == null)
-        {
-            Debug.LogError("TileManager instance not found.");
-            return;
-        }
 
         for (int row = 0; row < rows; row++)
         {
@@ -110,7 +104,6 @@ public class LevelManager : MonoBehaviour, ISingleton
                 if (tile != null)
                 {
                     tile.Initialize(col, row);
-                    tileManager.RegisterTile(tile);
                     AddRandomTileObject(tile);
                 }
                 else

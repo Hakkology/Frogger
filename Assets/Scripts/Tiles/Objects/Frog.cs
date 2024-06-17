@@ -30,6 +30,7 @@ public class Frog : DirectionObject
         if (!isAnimating)
         {
             isAnimating = true;
+            GetPath();
             Debug.Log("Starting tongue animation.");
             tongueMesh.ExtendTongue(facingDirection, 2.0f, 0.5f, () => {isAnimating = false;});
             tongueBone.DOLocalRotate(new Vector3(0, 0, -100), 0.5f).SetLoops(2, LoopType.Yoyo);
@@ -42,22 +43,38 @@ public class Frog : DirectionObject
         Vector2Int currentPosition = new Vector2Int(cell.gridX, cell.gridY);
         Direction currentDirection = facingDirection;
 
+        Debug.Log($"Starting path calculation from position {currentPosition} facing {currentDirection}");
+
         while (true)
         {
             currentPosition += DirectionToVector(currentDirection);
-            Tile nextTile = tileManager.GetTileAt(currentPosition.x, currentPosition.y);
-            if (nextTile == null || !IsColorMatch(nextTile.GetTopmostObject()))
-                break;
+            Debug.Log($"Checking next position at {currentPosition}");
 
+            Tile nextTile = tileManager.GetTileAt(currentPosition.x, currentPosition.y);
+            if (nextTile == null)
+            {
+                Debug.Log("Reached a boundary or non-existent tile.");
+                break;
+            }
+            
+            if (!IsColorMatch(nextTile.GetTopmostObject()))
+            {
+                Debug.Log($"Color mismatch or no valid object at position {currentPosition}");
+                break;
+            }
+
+            Debug.Log($"Adding position {currentPosition} to path.");
             path.Add(currentPosition);
 
-            // Check for arrows and change direction if needed
             Arrow arrow = nextTile.GetComponent<Arrow>();
             if (arrow != null && arrow.GetColorSet() == this.colorSet)
+            {
                 currentDirection = arrow.facingDirection;
-            
+                Debug.Log($"Direction change to {currentDirection} due to arrow at position {currentPosition}");
+            }
         }
 
+        Debug.Log($"Path calculation complete. Path length: {path.Count}");
         return path;
     }
 }

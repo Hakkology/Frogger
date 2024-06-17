@@ -4,7 +4,7 @@ public class DynamicObject : BaseObject, IDynamicObject
 {
     protected ColorSet colorSet;
     protected Tile cell; 
-    protected Vector2Int boardPosition;
+    public Vector2Int boardPosition;
     public override void Interact()
     {
 
@@ -30,7 +30,12 @@ public class DynamicObject : BaseObject, IDynamicObject
     protected bool IsColorMatch(BaseObject obj)
     {
         if (obj is DynamicObject dynObj)
-            return dynObj.colorSet == this.colorSet;
+        {
+            bool match = dynObj.colorSet == this.colorSet;
+            Debug.Log($"Comparing ColorSet: {this.colorSet} with {dynObj.colorSet} - Match: {match}");
+            return match;
+        }
+        Debug.Log("Object is not a DynamicObject");
         return false;
     }
 }

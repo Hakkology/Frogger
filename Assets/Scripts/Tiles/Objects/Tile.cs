@@ -18,6 +18,7 @@ public class Tile : BaseObject, ITileObject
     {
         gridX = x;
         gridY = y;
+        tileManager.RegisterTile(this);
     }
     public override void Interact()
     {
@@ -35,8 +36,20 @@ public class Tile : BaseObject, ITileObject
             directionObject.Init();
         
     }
-    public BaseObject GetTopmostObject() => tileObjects.Count > 0 ? tileObjects[tileObjects.Count - 1] : null;
-    
+    public BaseObject GetTopmostObject()
+    {
+        if (tileObjects.Count > 0)
+        {
+            Debug.Log($"Topmost object on Tile {gridX}, {gridY} is {tileObjects[tileObjects.Count - 1].name}");
+            return tileObjects[tileObjects.Count - 1];
+        }
+        else
+        {
+            Debug.Log($"No objects on Tile {gridX}, {gridY}");
+            return null;
+        }
+    }
+        
     public void RemoveTopmostObject()
     {
         if (tileObjects.Count > 0)

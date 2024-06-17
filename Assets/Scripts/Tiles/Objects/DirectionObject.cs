@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// Abstract class representing an object that can be placed on a tile and has a direction.
 /// </summary>
 public abstract class DirectionObject : DynamicObject, IDirectionObject
 {
     public Direction facingDirection;
+
     public void Init() 
     {
         DetermineFacingDirection();
@@ -54,15 +54,20 @@ public abstract class DirectionObject : DynamicObject, IDirectionObject
         transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
-    protected Vector2Int DirectionToVector(Direction direction)
+    protected Vector2Int DirectionToVector(Direction dir)
     {
-        switch (direction)
+        switch (dir)
         {
-            case Direction.Up: return new Vector2Int(0, -1);
-            case Direction.Down: return new Vector2Int(0, 1);
-            case Direction.Left: return new Vector2Int(-1, 0);
-            case Direction.Right: return new Vector2Int(1, 0);
-            default: return Vector2Int.zero;
+            case Direction.Up:
+                return new Vector2Int(0, 1);
+            case Direction.Down:
+                return new Vector2Int(0, -1);
+            case Direction.Left:
+                return new Vector2Int(-1, 0);
+            case Direction.Right:
+                return new Vector2Int(1, 0);
+            default:
+                throw new System.ArgumentOutOfRangeException("Unknown direction");
         }
     }
 }
