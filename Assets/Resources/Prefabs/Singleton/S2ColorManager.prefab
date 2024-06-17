@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 947135891770977277}
   - component: {fileID: 2127601884897017786}
   m_Layer: 0
-  m_Name: ColorManager
+  m_Name: S2ColorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

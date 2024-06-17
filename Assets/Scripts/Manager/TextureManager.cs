@@ -1,6 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum ColorSet{
+    Blue,
+    Green,
+    Purple,
+    Red,
+    Yellow
+}
+
 public class TextureManager : MonoBehaviour, ISingleton
 {
     [SerializeField]
@@ -11,26 +19,29 @@ public class TextureManager : MonoBehaviour, ISingleton
 
     }
 
-    public (Texture2D frogTexture, Texture2D cellTexture) GetRandomFrogTexture()
+    public (Texture2D frogTexture, Texture2D cellTexture, ColorSet color) GetRandomFrogTexture()
     {
         int index = Random.Range(0, textureData.frogTextureData.frogTextures.Length);
+        ColorSet color = (ColorSet)index;
         Texture2D frogTexture = textureData.frogTextureData.frogTextures[index];
         Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
-        return (frogTexture, cellTexture);
+        return (frogTexture, cellTexture, color);
     }
 
-    public (Texture2D grapeTexture, Texture2D cellTexture) GetRandomGrapeTexture()
+    public (Texture2D grapeTexture, Texture2D cellTexture, ColorSet color) GetRandomGrapeTexture()
     {
         int index = Random.Range(0, textureData.grapeTextureData.grapeTextures.Length);
+        ColorSet color = (ColorSet)index;
         Texture2D grapeTexture = textureData.grapeTextureData.grapeTextures[index];
         Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
-        return (grapeTexture, cellTexture);
+        return (grapeTexture, cellTexture, color);
     }
-    public (Texture2D arrowTexture, Texture2D cellTexture) GetRandomArrowTexture()
+    public (Texture2D arrowTexture, Texture2D cellTexture, ColorSet color) GetRandomArrowTexture()
     {
         int index = Random.Range(0, textureData.cellTextureData.cellTextures.Length);
+        ColorSet color = (ColorSet)index;
         Texture2D arrowTexture = textureData.cellTextureData.cellTextures[index];
         Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
-        return (arrowTexture, cellTexture);
+        return (arrowTexture, cellTexture, color);
     }
 }

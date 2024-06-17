@@ -14,7 +14,7 @@ public class Grape : DynamicObject
     private void Start() 
     {
         var textures = textureManager.GetRandomGrapeTexture();
-        HandleTextureChange(textures.grapeTexture, textures.cellTexture);
+        HandleTextureChange(textures.grapeTexture, textures.cellTexture, textures.color);
     }
     public override void Interact()
     {

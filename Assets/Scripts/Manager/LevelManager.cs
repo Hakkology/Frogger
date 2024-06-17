@@ -93,22 +93,25 @@ public class LevelManager : MonoBehaviour, ISingleton
     /// <param name="cols">The number of columns in the level.</param>
     private void CreateNewLevel(int rows, int cols)
     {
-    for (int row = 0; row < rows; row++) // İlk olarak row'ları (satırları) yinele
+        TileManager tileManager = SingletonManager.GetSingleton<TileManager>();
+        if (tileManager == null)
         {
-            for (int col = 0; col < cols; col++) // İçteki döngüde her row için col'ları (sütunları) yinele
+            Debug.LogError("TileManager instance not found.");
+            return;
+        }
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
             {
-                // Unity'de y eksenini kullanmadan, x ve z üzerinde konumlandırma yap
-                Vector3 position = new Vector3(col, 0, row); // Burada z ekseninde yukarı doğru ilerliyoruz
+                Vector3 position = new Vector3(col, 0, row);
                 GameObject cellInstance = Instantiate(cellPrefab, position, Quaternion.identity, transform);
-
-                // Log the instance creation for debugging
-                Debug.Log($"Created cell at position (X: {col}, Y: {row}, World Z: {position.z})");
-
                 Tile tile = cellInstance.GetComponent<Tile>();
                 if (tile != null)
                 {
-                    tile.Initialize(col, row); // Tile nesnesini başlat
-                    AddRandomTileObject(tile); // Tile içerisine rastgele nesne ekle
+                    tile.Initialize(col, row);
+                    tileManager.RegisterTile(tile);
+                    AddRandomTileObject(tile);
                 }
                 else
                 {
@@ -117,6 +120,7 @@ public class LevelManager : MonoBehaviour, ISingleton
             }
         }
     }
+
 
     /// <summary>
     /// Adds a random tile object to the specified tile.
