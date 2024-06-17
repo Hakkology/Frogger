@@ -8,7 +8,6 @@ using UnityEngine;
 public class SingletonManager : MonoBehaviour
 {
     private static Dictionary<System.Type, ISingleton> singletons = new Dictionary<System.Type, ISingleton>();
-
     /// <summary>
     /// Ensures the GameObject persists across scene loads and initiates the loading and instantiation of singleton prefabs.
     /// </summary>

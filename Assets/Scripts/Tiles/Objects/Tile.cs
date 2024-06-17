@@ -18,7 +18,6 @@ public class Tile : BaseObject, ITileObject
     {
         gridX = x;
         gridY = y;
-        tileManager.RegisterTile(this);
     }
     public override void Interact()
     {

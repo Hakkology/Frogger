@@ -43,13 +43,13 @@ public class Frog : DirectionObject
         Vector2Int currentPosition = new Vector2Int(cell.gridX, cell.gridY);
         Direction currentDirection = facingDirection;
 
-        Debug.Log($"Starting path calculation from position {currentPosition} facing {currentDirection}");
-
         while (true)
         {
             currentPosition += DirectionToVector(currentDirection);
-            Debug.Log($"Checking next position at {currentPosition}");
 
+            if (tileManager == null)
+                tileManager = SingletonManager.GetSingleton<TileManager>();
+            
             Tile nextTile = tileManager.GetTileAt(currentPosition.x, currentPosition.y);
             if (nextTile == null)
             {
@@ -57,20 +57,25 @@ public class Frog : DirectionObject
                 break;
             }
             
-            if (!IsColorMatch(nextTile.GetTopmostObject()))
+            BaseObject topmostObject = nextTile.GetTopmostObject();
+            // If its a grape of the same colour.
+            if (topmostObject is Grape grape && IsColorMatch(grape))
             {
-                Debug.Log($"Color mismatch or no valid object at position {currentPosition}");
-                break;
+                Debug.Log($"Adding position {currentPosition} with matching grape to path.");
+                path.Add(currentPosition);
             }
-
-            Debug.Log($"Adding position {currentPosition} to path.");
-            path.Add(currentPosition);
-
-            Arrow arrow = nextTile.GetComponent<Arrow>();
-            if (arrow != null && arrow.GetColorSet() == this.colorSet)
+            // If its an arrow with the same colour and it needs to continue on a different path.
+            else if (topmostObject is Arrow arrow && arrow.GetColorSet() == this.colorSet)
             {
+                Debug.Log($"Direction change to {arrow.facingDirection} due to arrow at position {currentPosition}");
                 currentDirection = arrow.facingDirection;
-                Debug.Log($"Direction change to {currentDirection} due to arrow at position {currentPosition}");
+                path.Add(currentPosition); 
+                continue; 
+            }
+            else
+            {
+                Debug.Log($"No matching grape or color mismatch at position {currentPosition}");
+                break;
             }
         }
 

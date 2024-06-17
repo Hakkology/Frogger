@@ -16,26 +16,43 @@ public class LevelManager : MonoBehaviour, ISingleton
 {
     private GameObject cellPrefab;
     private GameObject tilePrefab;
+    private TileManager tileManager;
+    private bool isReady = false;
+    public bool IsReady => isReady;
 
     /// <summary>
     /// Initializes the LevelManager by loading the square tile prefab.
     /// </summary>
+    
+    void Start()
+    {
+        tileManager = SingletonManager.GetSingleton<TileManager>();
+        
+        if (tileManager != null && tileManager.IsReady)
+        {
+
+            tileManager = SingletonManager.GetSingleton<TileManager>();
+        
+            cellPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
+            tilePrefab = Resources.Load<GameObject>("Prefabs/Objects/TileObject");
+            if (cellPrefab == null)
+            {
+                Debug.LogError("Cell prefab could not be loaded from Resources/Prefabs/Objects/Cell");
+            }
+            if (tilePrefab == null)
+            {
+                Debug.LogError("Tile prefab could not be loaded from Resources/Prefabs/Objects/TileObject");
+            }
+
+            GenerateLevel(LevelSize.SixBySix);
+            isReady = true;
+        }
+    }
     public void Init()
     {
-        cellPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
-        tilePrefab = Resources.Load<GameObject>("Prefabs/Objects/TileObject");
-        if (cellPrefab == null)
-        {
-            Debug.LogError("Cell prefab could not be loaded from Resources/Prefabs/Objects/Cell");
-        }
-        if (tilePrefab == null)
-        {
-            Debug.LogError("Tile prefab could not be loaded from Resources/Prefabs/Objects/TileObject");
-        }
 
-        GenerateLevel(LevelSize.SixBySix);
     }
-
+    
     /// <summary>
     /// Generates a level based on the specified size.
     /// </summary>
@@ -101,10 +118,12 @@ public class LevelManager : MonoBehaviour, ISingleton
                 Vector3 position = new Vector3(col, 0, row);
                 GameObject cellInstance = Instantiate(cellPrefab, position, Quaternion.identity, transform);
                 Tile tile = cellInstance.GetComponent<Tile>();
+
                 if (tile != null)
                 {
                     tile.Initialize(col, row);
                     AddRandomTileObject(tile);
+                    tileManager.RegisterTile(tile);
                 }
                 else
                 {

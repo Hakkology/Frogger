@@ -11,7 +11,7 @@ public abstract class BaseObject : MonoBehaviour, IBaseObject
     protected virtual void Awake() 
     {
         textureManager = SingletonManager.GetSingleton<TextureManager>();
-        tileManager = SingletonManager.GetSingleton<TileManager>();
+        //tileManager = SingletonManager.GetSingleton<TileManager>();
     } 
     public virtual void UpdateTexture(Texture2D newTexture) => textureRenderer.material.mainTexture = newTexture;
     public abstract void Interact();
