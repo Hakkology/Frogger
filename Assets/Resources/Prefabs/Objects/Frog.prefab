@@ -47,6 +47,7 @@ MonoBehaviour:
   tongueRoot: {fileID: 1728622938402299965}
   extendSpeed: 5
   retractSpeed: 7
+  tongueMaterial: {fileID: 2100000, guid: 40e0ff971aa1c1b798f22c2845581a26, type: 2}
 --- !u!1 &6415802529536298319
 GameObject:
   m_ObjectHideFlags: 0

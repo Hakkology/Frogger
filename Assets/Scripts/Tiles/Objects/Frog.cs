@@ -35,7 +35,7 @@ public class Frog : DirectionObject
             {
                 Debug.Log("Starting tongue animation.");
                 Vector3 targetPosition = tileManager.GetTileAt(travelCoordinates[travelCoordinates.Count - 1].x, travelCoordinates[travelCoordinates.Count - 1].y).transform.position;
-                tongue.ExtendTongue(targetPosition);
+                tongue.StartExtendTongue(travelCoordinates);
 
                 // Yoyo animasyonunu burada başlat
                 var rotateSequence = tongueBone.DOLocalRotate(new Vector3(0, 0, -100), 0.5f).SetLoops(2, LoopType.Yoyo);
