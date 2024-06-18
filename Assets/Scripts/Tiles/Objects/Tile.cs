@@ -7,7 +7,7 @@ using UnityEngine;
 public class Tile : BaseObject, ITileObject
 {
     public int gridX, gridY;
-    private List<BaseObject> tileObjects = new List<BaseObject>();
+    public List<BaseObject> ObjectsOnTile = new List<BaseObject>();
     protected override void Awake() 
     {
         base.Awake();
@@ -25,7 +25,7 @@ public class Tile : BaseObject, ITileObject
     }
     public void AddTileObject(BaseObject tileObject)
     {
-        tileObjects.Add(tileObject);
+        ObjectsOnTile.Add(tileObject);
         tileObject.transform.SetParent(this.transform);
 
         if (tileObject is DynamicObject dynamicObject)
@@ -37,10 +37,10 @@ public class Tile : BaseObject, ITileObject
     }
     public BaseObject GetTopmostObject()
     {
-        if (tileObjects.Count > 0)
+        if (ObjectsOnTile.Count > 0)
         {
-            Debug.Log($"Topmost object on Tile {gridX}, {gridY} is {tileObjects[tileObjects.Count - 1].name}");
-            return tileObjects[tileObjects.Count - 1];
+            Debug.Log($"Topmost object on Tile {gridX}, {gridY} is {ObjectsOnTile[ObjectsOnTile.Count - 1].name}");
+            return ObjectsOnTile[ObjectsOnTile.Count - 1];
         }
         else
         {
@@ -51,10 +51,10 @@ public class Tile : BaseObject, ITileObject
         
     public void RemoveTopmostObject()
     {
-        if (tileObjects.Count > 0)
+        if (ObjectsOnTile.Count > 0)
         {
-            Destroy(tileObjects[tileObjects.Count - 1].gameObject);
-            tileObjects.RemoveAt(tileObjects.Count - 1);
+            Destroy(ObjectsOnTile[ObjectsOnTile.Count - 1].gameObject);
+            ObjectsOnTile.RemoveAt(ObjectsOnTile.Count - 1);
         }
     }
     public override void UpdateTexture(Texture2D newTexture) {

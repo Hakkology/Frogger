@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class TongueController : MonoBehaviour
 {
@@ -50,36 +51,67 @@ public class TongueController : MonoBehaviour
         OnTongueExtended?.Invoke();
         yield return new WaitForSeconds(1);
 
-        StartCoroutine(RetractTongueRoutine(worldPoints));
+        StartCoroutine(RetractTongueRoutine(worldPoints, pathPoints));
     }
 
-    private IEnumerator RetractTongueRoutine(List<Vector3> worldPoints)
+    private IEnumerator RetractTongueRoutine(List<Vector3> worldPoints, List<Vector2Int> pathPoints)
     {
+        TileManager tileManager = SingletonManager.GetSingleton<TileManager>();
         int pointCount = worldPoints.Count;
-        Vector3 startPosition = tongueRoot.position;  // Başlangıç noktası
+        List<GameObject> collectedGrapes = new List<GameObject>();
 
-        // İlk pozisyon hariç tüm pozisyonları başlangıç noktasına ayarla
-        float retractDuration = (Vector3.Distance(worldPoints[pointCount - 1], startPosition) / retractSpeed);
+        float retractDuration = Vector3.Distance(worldPoints[pointCount - 1], tongueRoot.position) / retractSpeed;
         float timeElapsed = 0;
 
         while (timeElapsed < retractDuration)
         {
             float t = timeElapsed / retractDuration;
-            for (int i = 1; i < pointCount; i++)  // İlk nokta zaten başlangıçta
+            for (int i = 0; i < pointCount; i++)
             {
-                Vector3 position = Vector3.Lerp(worldPoints[i], startPosition, t);
+                Vector3 position = Vector3.Lerp(worldPoints[i], tongueRoot.position, t);
                 lineRenderer.SetPosition(i, position);
+
+                if (i > 0) // Check to collect grapes only after the first point
+                {
+                    Vector2Int gridPos = pathPoints[i-1];
+                    Tile tile = tileManager.GetTileAt(gridPos.x, gridPos.y);
+                    if (tile != null)
+                    {
+                        foreach (BaseObject obj in tile.ObjectsOnTile)
+                        {
+                            if (obj is Grape grape && !collectedGrapes.Contains(grape.gameObject))
+                            {
+                                collectedGrapes.Add(grape.gameObject); // Üzümü toplananlar listesine ekleyin.
+                                grape.transform.DOMove(tongueRoot.position, retractDuration * (1-t)).SetEase(Ease.Linear).OnComplete(() =>
+                                {
+                                    // OnComplete içinde objenin yok edilip edilmediğini kontrol et.
+                                    if (grape != null && grape.gameObject != null) 
+                                    {
+                                        Destroy(grape.gameObject);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
             }
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Tüm pozisyonları kesin olarak başlangıç noktasına ayarla
-        for (int i = 1; i < pointCount; i++)
+        // Ensure all grape positions are at tongue root when animation completes
+        foreach (GameObject grape in collectedGrapes)
         {
-            lineRenderer.SetPosition(i, startPosition);
+            grape.transform.position = tongueRoot.position; // In case any animation hasn't completed
+        }
+
+        // Reset all line positions to the start
+        for (int i = 0; i < pointCount; i++)
+        {
+            lineRenderer.SetPosition(i, tongueRoot.position);
         }
 
         OnTongueRetracted?.Invoke();
     }
+
 }
