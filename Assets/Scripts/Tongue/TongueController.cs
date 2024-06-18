@@ -77,32 +77,32 @@ public class TongueController : MonoBehaviour
                     Tile tile = tileManager.GetTileAt(gridPos.x, gridPos.y);
                     if (tile != null)
                     {
+                        List<BaseObject> objectsToRemove = new List<BaseObject>();
                         foreach (BaseObject obj in tile.ObjectsOnTile)
                         {
                             if (obj is Grape grape && !collectedGrapes.Contains(grape.gameObject))
                             {
-                                collectedGrapes.Add(grape.gameObject); // Üzümü toplananlar listesine ekleyin.
+                                collectedGrapes.Add(grape.gameObject); // Add grape to collected list.
                                 grape.transform.DOMove(tongueRoot.position, retractDuration * (1-t)).SetEase(Ease.Linear).OnComplete(() =>
                                 {
-                                    // OnComplete içinde objenin yok edilip edilmediğini kontrol et.
-                                    if (grape != null && grape.gameObject != null) 
+                                    // Check if the object still exists before trying to access it.
+                                    if (grape != null)
                                     {
-                                        Destroy(grape.gameObject);
+                                        objectsToRemove.Add(grape);
                                     }
                                 });
                             }
+                        }
+                        foreach (var obj in objectsToRemove)
+                        {
+                            tile.ObjectsOnTile.Remove(obj);
+                            Destroy(obj.gameObject);
                         }
                     }
                 }
             }
             timeElapsed += Time.deltaTime;
             yield return null;
-        }
-
-        // Ensure all grape positions are at tongue root when animation completes
-        foreach (GameObject grape in collectedGrapes)
-        {
-            grape.transform.position = tongueRoot.position; // In case any animation hasn't completed
         }
 
         // Reset all line positions to the start
