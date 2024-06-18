@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e78bc20cf3168ecb4c3440ec6b960f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tongueSegmentPrefab: {fileID: 390334522676628282, guid: c17798b98a6bcd56e89ed53ee697c5ae, type: 3}
 --- !u!1001 &9027333156417703195
 PrefabInstance:
   m_ObjectHideFlags: 0

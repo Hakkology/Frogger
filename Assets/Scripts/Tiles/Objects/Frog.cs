@@ -8,7 +8,7 @@ using UnityEngine;
 public class Frog : DirectionObject
 {
     public Transform tongueBone;
-    private TongueManager tongue;
+    public TongueController tongue;
     private bool isAnimating = false;
     
     protected override void Awake() 
@@ -16,7 +16,7 @@ public class Frog : DirectionObject
         base.Awake();
         Debug.Log("Frog Awake called, subscribing to Texture Change.");
         textureRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        tongue = GetComponentInChildren<TongueManager>();
+        tongue = GetComponentInChildren<TongueController>();
     } 
 
     private void Start() 
@@ -31,9 +31,26 @@ public class Frog : DirectionObject
         {
             isAnimating = true;
             List<Vector2Int> travelCoordinates = GetPath();
-            Debug.Log("Starting tongue animation.");
-            tongue.ExtendTongue(travelCoordinates, () => {isAnimating = false;});
-            tongueBone.DOLocalRotate(new Vector3(0, 0, -100), 0.5f).SetLoops(2, LoopType.Yoyo);
+            if (travelCoordinates.Count > 0)
+            {
+                Debug.Log("Starting tongue animation.");
+                Vector3 targetPosition = tileManager.GetTileAt(travelCoordinates[travelCoordinates.Count - 1].x, travelCoordinates[travelCoordinates.Count - 1].y).transform.position;
+                tongue.ExtendTongue(targetPosition);
+
+                // Yoyo animasyonunu burada başlat
+                var rotateSequence = tongueBone.DOLocalRotate(new Vector3(0, 0, -100), 0.5f).SetLoops(2, LoopType.Yoyo);
+                tongue.OnTongueRetracted += () => 
+                {
+                    rotateSequence.Kill(true); // Event geldiğinde yoyo animasyonunu sonlandır
+                    tongueBone.localRotation = Quaternion.identity; // Orjinal rotasyona dön
+                    isAnimating = false;
+                };
+            }
+            else
+            {
+                Debug.Log("No valid path found, animation not started.");
+                isAnimating = false;
+            }
         }
     }
 
