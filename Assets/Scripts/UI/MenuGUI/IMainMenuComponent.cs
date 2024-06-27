@@ -1,6 +1,4 @@
-public interface IMainMenuComponent
+public interface IMainMenuComponent : IMenuComponent
 {
-    void Open();
-    void Close();
     void SetupController(MainMenuGUIController mainMenuController);
 }

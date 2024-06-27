@@ -14,6 +14,10 @@ public class UIManager : MonoBehaviour, ISingleton
     public MainMenuComponent levelSelectMenu;
     public MainMenuComponent settingsMenu;
 
+    [Header("Game Menu Components")]
+    public GameMenuComponent pauseMenu;
+    public GameMenuComponent gameSettingsMenu;
+
     private MainMenuGUIController mainMenuGUIController;
     private GameGUIController gameGUIController;
     private GameHUDController gameHUDController;
@@ -28,11 +32,14 @@ public class UIManager : MonoBehaviour, ISingleton
     private void InitializeControllers(){
         gameHUDController = new GameHUDController();
         mainMenuGUIController = new MainMenuGUIController(entryMenu, levelSelectMenu, settingsMenu);
-        gameGUIController = new GameGUIController();
+        gameGUIController = new GameGUIController(pauseMenu, gameSettingsMenu);
 
         entryMenu.SetupController(mainMenuGUIController);
         levelSelectMenu.SetupController(mainMenuGUIController);
         settingsMenu.SetupController(mainMenuGUIController);
+
+        pauseMenu.SetupController(gameGUIController);
+        gameSettingsMenu.SetupController(gameGUIController);
     }
     public void ChangeGameState(GameState newState)
     {
