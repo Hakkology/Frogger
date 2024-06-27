@@ -44,8 +44,8 @@ public class LevelManager : MonoBehaviour, ISingleton
                 Debug.LogError("Tile prefab could not be loaded from Resources/Prefabs/Objects/TileObject");
             }
 
-            GenerateLevel(LevelSize.SixBySix);
-            isReady = true;
+            // GenerateLevel(LevelSize.SixBySix);
+            // isReady = true;
         }
     }
     public void Init()

@@ -1,6 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[CreateAssetMenu(fileName = "NewLevelLayout", menuName = "Level/Level Layout")]
+public class LevelLayout : ScriptableObject
+{
+    public string levelName;
+    public Sprite levelImage;
+    public LevelConfig levelConfig;
+}
+
 [CreateAssetMenu(fileName = "NewLevelConfig", menuName = "Level Configuration/New Level Configuration")]
 public class LevelConfig : ScriptableObject
 {

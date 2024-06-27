@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using System.Collections.Generic;
+using TMPro;
 
 public class SettingsMenu : MainMenuComponent
 {
@@ -11,7 +12,7 @@ public class SettingsMenu : MainMenuComponent
     public Slider masterVolumeSlider;
 
     [Header("Dropdown")]
-    public Dropdown languageDropdown;
+    public TMP_Dropdown languageDropdown;
 
     [Header("Audio Mixer")]
     public AudioMixer audioMixer; 
