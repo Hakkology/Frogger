@@ -39,7 +39,7 @@ public abstract class DirectionObject : DynamicObject, IDirectionObject
         }
     }
 
-    protected virtual void RotateObjectToFaceDirection()
+    public virtual void RotateObjectToFaceDirection()
     {
         Debug.Log($"Rotating to face direction: {facingDirection}");
         float angle = facingDirection switch

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2221273212757705723}
-  - component: {fileID: 773888361796744786}
+  - component: {fileID: 4511902212652469449}
   m_Layer: 0
   m_Name: S2LevelManager
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &773888361796744786
+--- !u!114 &4511902212652469449
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,6 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1795001963610132335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c978cd39321a9dd47b1badc68b8f98f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3bdb0919f3469014ca6e7af195917b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevelConfig: {fileID: 0}
+  levelParent: {fileID: 0}
+  tilePrefab: {fileID: 0}

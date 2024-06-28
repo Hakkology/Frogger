@@ -34,18 +34,18 @@ public class MainMenuGUIController : IUIController
     private void UpdateMenuState()
     {
         // İlgili menüyü açmadan önce tüm menüleri kapat
-        CloseAllMenus();
-
-        // Menü durumuna göre ilgili menüyü aç
         switch (currentState)
         {
             case MenuState.EntryMenu:
+                CloseAllMenusExcept(entryMenu);
                 entryMenu.Open();
                 break;
             case MenuState.LevelSelect:
+                CloseAllMenusExcept(levelSelectMenu);
                 levelSelectMenu.Open();
                 break;
             case MenuState.Settings:
+                CloseAllMenusExcept(settingsMenu);
                 settingsMenu.Open();
                 break;
         }
@@ -57,6 +57,13 @@ public class MainMenuGUIController : IUIController
         entryMenu.Close();
         levelSelectMenu.Close();
         settingsMenu.Close();
+    }
+
+    private void CloseAllMenusExcept(MainMenuComponent menuToExclude)
+    {
+        if (menuToExclude != entryMenu) entryMenu.Close();
+        if (menuToExclude != levelSelectMenu) levelSelectMenu.Close();
+        if (menuToExclude != settingsMenu) settingsMenu.Close();
     }
 
     // Durum değişiklik metotları

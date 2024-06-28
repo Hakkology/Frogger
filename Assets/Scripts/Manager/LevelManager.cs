@@ -1,95 +1,93 @@
-using DG.Tweening;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public enum LevelSize
-{
-    FiveByFive,
-    FiveBySix,
-    SixBySix
-}
-
-/// <summary>
-/// The <c>LevelManager</c> class is responsible for generating levels based on the given size.
-/// It uses prefabs from the Resources/Prefabs/Objects directory to create the level grid.
-/// </summary>
 public class LevelManager : MonoBehaviour, ISingleton
 {
-    private GameObject cellPrefab;
-    private GameObject tilePrefab;
+    public LevelConfig currentLevelConfig;
     private TileManager tileManager;
+    private TextureManager textureManager;
+    public Transform levelParent;
+
+    public GameObject cellPrefab;
+    private Dictionary<string, GameObject> prefabDictionary;
+
     private bool isReady = false;
     public bool IsReady => isReady;
 
-    /// <summary>
-    /// Initializes the LevelManager by loading the square tile prefab.
-    /// </summary>
-    
-    void Start()
-    {
-        tileManager = SingletonManager.GetSingleton<TileManager>();
-        
-        if (tileManager != null && tileManager.IsReady)
-        {
-
-            tileManager = SingletonManager.GetSingleton<TileManager>();
-        
-            cellPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
-            tilePrefab = Resources.Load<GameObject>("Prefabs/Objects/TileObject");
-            if (cellPrefab == null)
-            {
-                Debug.LogError("Cell prefab could not be loaded from Resources/Prefabs/Objects/Cell");
-            }
-            if (tilePrefab == null)
-            {
-                Debug.LogError("Tile prefab could not be loaded from Resources/Prefabs/Objects/TileObject");
-            }
-
-            // GenerateLevel(LevelSize.SixBySix);
-            // isReady = true;
-        }
-    }
     public void Init()
     {
+        tileManager = SingletonManager.GetSingleton<TileManager>();
+        textureManager = SingletonManager.GetSingleton<TextureManager>();
 
+        prefabDictionary = new Dictionary<string, GameObject>();
+        if (tileManager != null && tileManager.IsReady)
+        {
+            LoadPrefabs();
+            isReady = true;
+        }
     }
-    
-    /// <summary>
-    /// Generates a level based on the specified size.
-    /// </summary>
-    /// <param name="size">The size of the level to generate.</param>
-    public void GenerateLevel(LevelSize size)
+    private void LoadPrefabs()
     {
-        (int rows, int cols) = GetLevelDimensions(size);
+        GameObject cellPrefab = Resources.Load<GameObject>("Prefabs/Objects/Cell");
+        if (cellPrefab == null)
+        {
+            Debug.LogError("Cell prefab could not be loaded from Resources/Prefabs/Objects/Cell");
+        }
+        else
+        {
+            prefabDictionary.Add("Cell", cellPrefab);
+        }
+
+        string[] objectNames = { "Frog", "Grape", "Arrow" };
+        foreach (var objectName in objectNames)
+        {
+            GameObject prefab = Resources.Load<GameObject>($"Prefabs/Objects/{objectName}");
+            if (prefab == null)
+            {
+                Debug.LogError($"{objectName} prefab could not be loaded from Resources/Prefabs/Objects/{objectName}");
+            }
+            else
+            {
+                prefabDictionary.Add(objectName, prefab);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Generates a level based on the specified level configuration.
+    /// </summary>
+    /// <param name="levelConfig">The configuration of the level to generate.</param>
+    public void GenerateLevel(LevelConfig levelConfig)
+    {
+        if (!isReady || cellPrefab == null)
+        {
+            Debug.LogError("LevelManager is not ready or cellPrefab is not loaded.");
+            return;
+        }
 
         ClearExistingLevel();
 
-        CreateNewLevel(rows, cols);
-    }
-
-    /// <summary>
-    /// Determines the number of rows and columns for the specified level size.
-    /// </summary>
-    /// <param name="size">The size of the level.</param>
-    /// <returns>A tuple containing the number of rows and columns.</returns>
-    private (int, int) GetLevelDimensions(LevelSize size)
-    {
-        int rows = 0, cols = 0;
-        switch (size)
+        for (int row = 0; row < 6; row++)
         {
-            case LevelSize.FiveByFive:
-                rows = 5;
-                cols = 5;
-                break;
-            case LevelSize.FiveBySix:
-                rows = 5;
-                cols = 6;
-                break;
-            case LevelSize.SixBySix:
-                rows = 6;
-                cols = 6;
-                break;
+            for (int col = 0; col < 6; col++)
+            {
+                Vector3 position = new Vector3(col, 0, row);
+                GameObject cellInstance = Instantiate(prefabDictionary["Cell"], position, Quaternion.identity, transform);
+                Tile tile = cellInstance.GetComponent<Tile>();
+
+                if (tile != null)
+                {
+                    tile.Initialize(col, row);
+                    AddConfiguredTileObjects(tile, levelConfig.GetTileConfig(col, row));
+                    tileManager.RegisterTile(tile);
+                }
+                else
+                {
+                    Debug.LogError("Tile component could not be found on the instantiated cellPrefab.");
+                }
+            }
         }
-        return (rows, cols);
     }
 
     /// <summary>
@@ -104,105 +102,64 @@ public class LevelManager : MonoBehaviour, ISingleton
     }
 
     /// <summary>
-    /// Creates a new level with the specified number of rows and columns.
+    /// Adds configured tile objects to the specified tile based on the tile configuration.
     /// </summary>
-    /// <param name="rows">The number of rows in the level.</param>
-    /// <param name="cols">The number of columns in the level.</param>
-    private void CreateNewLevel(int rows, int cols)
+    /// <param name="tile">The tile to add the objects to.</param>
+    /// <param name="tileConfig">The configuration of the tile.</param>
+    private void AddConfiguredTileObjects(Tile tile, LevelConfig.TileConfig tileConfig)
     {
-
-        for (int row = 0; row < rows; row++)
+        if (tileConfig == null)
         {
-            for (int col = 0; col < cols; col++)
-            {
-                Vector3 position = new Vector3(col, 0, row);
-                GameObject cellInstance = Instantiate(cellPrefab, position, Quaternion.identity, transform);
-                Tile tile = cellInstance.GetComponent<Tile>();
+            return;
+        }
 
-                if (tile != null)
+        foreach (var objConfig in tileConfig.objects)
+        {
+            if (prefabDictionary.TryGetValue(objConfig.objectType, out GameObject prefab))
+            {
+                Vector3 position = tile.transform.position + Vector3.up * objConfig.verticalPosition;
+                GameObject objInstance = Instantiate(prefab, position, Quaternion.identity, tile.transform);
+
+                // Setup the object's properties based on objConfig
+                BaseObject baseObject = objInstance.GetComponent<BaseObject>();
+                if (baseObject != null)
                 {
-                    tile.Initialize(col, row);
-                    AddRandomTileObject(tile);
-                    tileManager.RegisterTile(tile);
-                }
-                else
-                {
-                    Debug.LogError("Tile component could not be found on the instantiated cellPrefab.");
+                    tile.AddTileObject(baseObject);
+
+                    if (baseObject is DirectionObject directionObject)
+                    {
+                        directionObject.facingDirection = objConfig.direction;
+                        directionObject.RotateObjectToFaceDirection();
+                    }
+
+                    // Handle Texture Change based on object type and color
+                    if (baseObject is Frog)
+                    {
+                        var textures = textureManager.GetFrogTexture(objConfig.color);
+                        ((DynamicObject)baseObject).HandleTextureChange(textures.frogTexture, textures.cellTexture, objConfig.color);
+                    }
+                    else if (baseObject is Grape)
+                    {
+                        var textures = textureManager.GetGrapeTexture(objConfig.color);
+                        ((DynamicObject)baseObject).HandleTextureChange(textures.grapeTexture, textures.cellTexture, objConfig.color);
+                    }
+                    else if (baseObject is Arrow)
+                    {
+                        var textures = textureManager.GetArrowTexture(objConfig.color);
+                        ((DynamicObject)baseObject).HandleTextureChange(textures.arrowTexture, textures.cellTexture, objConfig.color);
+                    }
                 }
             }
+            else
+            {
+                Debug.LogError($"Prefab for object type {objConfig.objectType} not found in dictionary.");
+            }
         }
+
+        tile.GetTopmostObject()?.gameObject.SetActive(true);
     }
 
 
-    /// <summary>
-    /// Adds a random tile object to the specified tile.
-    /// </summary>
-    /// <param name="tile">The tile to add the object to.</param>
-    private void AddRandomTileObject(Tile tile)
-    {
-        if (tile == null)
-        {
-            Debug.LogError("Tile is null in AddRandomTileObject");
-            return;
-        }
-
-        GameObject tileObjectPrefab = SelectRandomTileObject();
-
-        if (tileObjectPrefab != null)
-        {
-            SpawnTileObject(tile, tileObjectPrefab);
-        }
-    }
-
-    /// <summary>
-    /// Selects a random tile object prefab (Frog, Arrow, or Grape).
-    /// </summary>
-    /// <returns>The selected tile object prefab.</returns>
-    private GameObject SelectRandomTileObject()
-    {
-        int randomObject = Random.Range(0, 3);
-        GameObject tileObjectPrefab = null;
-
-        switch (randomObject)
-        {
-            case 0:
-                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Frog");
-                break;
-            case 1:
-                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Grape");
-                break;
-            case 2:
-                tileObjectPrefab = Resources.Load<GameObject>("Prefabs/Objects/Arrow");
-                break;
-        }
-
-        if (tileObjectPrefab == null)
-        {
-            Debug.LogError($"Tile object prefab could not be loaded for randomObject: {randomObject}");
-        }
-
-        return tileObjectPrefab;
-    }
-
-    /// <summary>
-    /// Spawns a tile object on the specified tile with a growth animation.
-    /// </summary>
-    /// <param name="tile">The tile to add the object to.</param>
-    /// <param name="tileObjectPrefab">The tile object prefab to instantiate.</param>
-    private void SpawnTileObject(Tile tile, GameObject tileObjectPrefab)
-    {
-        Vector3 position = tile.transform.position + Vector3.up*.5f;
-        GameObject tileObjectInstance = Instantiate(tileObjectPrefab, position, Quaternion.identity, tile.transform);
-        tileObjectInstance.transform.localScale = Vector3.zero;
-        tileObjectInstance.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
-
-        BaseObject tileObject = tileObjectInstance.GetComponent<BaseObject>();
-        if (tileObject == null)
-        {
-            Debug.LogError("BaseObject component could not be found on the instantiated tileObjectPrefab.");
-            return;
-        }
-
-        tile.AddTileObject(tileObject);
-    }
 }
+
+

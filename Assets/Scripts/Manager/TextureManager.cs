@@ -76,4 +76,43 @@ public class TextureManager : MonoBehaviour, ISingleton
         Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
         return (arrowTexture, cellTexture, color);
     }
+
+    /// <summary>
+    /// Gets the frog texture for the specified color set along with its corresponding cell texture.
+    /// </summary>
+    /// <param name="color">The color set.</param>
+    /// <returns>A tuple containing the frog texture and cell texture for the specified color set.</returns>
+    public (Texture2D frogTexture, Texture2D cellTexture) GetFrogTexture(ColorSet color)
+    {
+        int index = (int)color;
+        Texture2D frogTexture = textureData.frogTextureData.frogTextures[index];
+        Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
+        return (frogTexture, cellTexture);
+    }
+
+    /// <summary>
+    /// Gets the grape texture for the specified color set along with its corresponding cell texture.
+    /// </summary>
+    /// <param name="color">The color set.</param>
+    /// <returns>A tuple containing the grape texture and cell texture for the specified color set.</returns>
+    public (Texture2D grapeTexture, Texture2D cellTexture) GetGrapeTexture(ColorSet color)
+    {
+        int index = (int)color;
+        Texture2D grapeTexture = textureData.grapeTextureData.grapeTextures[index];
+        Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
+        return (grapeTexture, cellTexture);
+    }
+
+    /// <summary>
+    /// Gets the arrow texture for the specified color set along with its corresponding cell texture.
+    /// </summary>
+    /// <param name="color">The color set.</param>
+    /// <returns>A tuple containing the arrow texture and cell texture for the specified color set.</returns>
+    public (Texture2D arrowTexture, Texture2D cellTexture) GetArrowTexture(ColorSet color)
+    {
+        int index = (int)color;
+        Texture2D arrowTexture = textureData.cellTextureData.cellTextures[index];
+        Texture2D cellTexture = textureData.cellTextureData.cellTextures[index];
+        return (arrowTexture, cellTexture);
+    }
 }

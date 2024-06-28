@@ -97,4 +97,24 @@ public class TileManager : MonoBehaviour, ISingleton
         Debug.LogError($"No tile found at position ({x}, {y})");
         return null;
     }
+
+    /// <summary>
+    /// Rotates an object on the specified tile to face the given direction.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the tile position.</param>
+    /// <param name="y">The y-coordinate of the tile position.</param>
+    /// <param name="direction">The direction to face.</param>
+    public void SetRotation(int x, int y, Direction direction)
+    {
+        Tile tile = GetTileAt(x, y);
+        if (tile != null)
+        {
+            DirectionObject directionObject = tile.GetTopmostObject() as DirectionObject;
+            if (directionObject != null)
+            {
+                directionObject.facingDirection = direction;
+                directionObject.RotateObjectToFaceDirection();
+            }
+        }
+    }
 }

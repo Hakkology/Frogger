@@ -9,12 +9,15 @@ public abstract class MainMenuComponent : MonoBehaviour, IMainMenuComponent
 
     public virtual void Open()
     {
+        Debug.Log("Opening: " + gameObject.name);
         gameObject.SetActive(true);
-        transform.DOScale(1, animationDuration).SetEase(easeType).From(0).OnComplete(OnOpenComplete);
+        transform.localScale = Vector3.zero;  // Animasyonu 0'dan başlat
+        transform.DOScale(1, animationDuration).SetEase(easeType).OnComplete(OnOpenComplete);
     }
 
     public virtual void Close()
     {
+        Debug.Log("Closing: " + gameObject.name);
         transform.DOScale(0, animationDuration).SetEase(easeType).OnComplete(() =>
         {
             gameObject.SetActive(false);

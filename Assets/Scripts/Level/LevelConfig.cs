@@ -13,13 +13,17 @@ public class LevelLayout : ScriptableObject
 [CreateAssetMenu(fileName = "NewLevelConfig", menuName = "Level Configuration/New Level Configuration")]
 public class LevelConfig : ScriptableObject
 {
-    public List<TileConfig> tiles;
+    public List<TileConfig> tiles = new List<TileConfig>();
+    public TileConfig GetTileConfig(int x, int y)
+    {
+        return tiles.Find(t => t.x == x && t.y == y);
+    }
 
     [System.Serializable]
     public class TileConfig
     {
         public int x, y;
-        public List<ObjectConfig> objects;
+        public List<ObjectConfig> objects = new List<ObjectConfig>();
     }
 
     [System.Serializable]
@@ -28,5 +32,6 @@ public class LevelConfig : ScriptableObject
         public string objectType;
         public Direction direction;
         public ColorSet color;
+        public float verticalPosition;
     }
 }

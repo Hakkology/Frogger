@@ -16,7 +16,7 @@ public class DynamicObject : BaseObject, IDynamicObject
         this.boardPosition = new Vector2Int(cell.gridX, cell.gridY);
     }
 
-    protected virtual void HandleTextureChange(Texture2D objTexture, Texture2D cellTexture, ColorSet color)
+    public virtual void HandleTextureChange(Texture2D objTexture, Texture2D cellTexture, ColorSet color)
     {
         this.colorSet = color;
 

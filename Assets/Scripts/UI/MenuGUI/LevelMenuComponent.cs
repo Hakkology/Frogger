@@ -26,4 +26,6 @@ public class LevelSelectMenu : MainMenuComponent
         Debug.Log("Selected Level: " + level.levelName);
         // SceneManager.LoadScene(level.levelConfig); // Örnek bir sahne yükleme işlemi
     }
+    public void OnBackButtonClicked() => controller.GoToMainMenu();  
+    
 }
